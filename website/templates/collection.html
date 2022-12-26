@@ -1,0 +1,56 @@
+{% extends "header.html" %}
+{%block Title %} Administration {% endblock %}
+
+{%block MainPart %}
+<style>
+    .lightbox-gallery{background-image: linear-gradient(#4A148C, #E53935);background-repeat: no-repeat;color: #000;overflow-x: hidden}.lightbox-gallery p{color:#fff}.lightbox-gallery h2{font-weight:bold;margin-bottom:40px;padding-top:40px;color:#fff}@media (max-width:767px){.lightbox-gallery h2{margin-bottom:25px;padding-top:25px;font-size:24px}}.lightbox-gallery .intro{font-size:16px;max-width:500px;margin:0 auto 40px}.lightbox-gallery .intro p{margin-bottom:0}.lightbox-gallery .photos{padding-bottom:20px}.lightbox-gallery .item{padding-bottom:30px}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
+
+
+    <ul>
+        {% for img in user.imgs %}
+        <li id = "item{{img.id}}">
+            <div class="col-sm-6 col-md-4 col-lg-3 item"><img class="img-fluid" src="/static/images/{{img.id}}{{img.suffix}}"></div>
+            <button onclick="OnClick({{img.id}});">DEL</button>
+        </li>
+        {% endfor %}
+    </ul>
+
+
+    <form method="POST" enctype=multipart/form-data>
+        <input type="file"
+           id="FILE" name="file"
+           accept="image/png, image/jpeg">
+           <button type="submit" onclick="window.location.href='/collection.html';">SEND FILE</button>
+    </form>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+        async function OnClick(num)
+        {
+            document.getElementById("item"+num).remove();
+            await fetch('/deleteImage/'+num, {
+                method: "POST", 
+              });    
+              console.log("File Deleted");
+/**
+            $.ajax({
+                url: '/deleteImage/'+num,
+                type: 'DELETE',
+                success: function(result) {
+                    console.log("succesfully deleted")
+                }
+                });
+
+            const form = document.createElement('form');
+            form.method = "POST"
+            field = document.createElement('input');
+            field.type = "name";
+            field.name = "num"
+            field.value = num
+            form.appendChild(field)
+            document.body.appendChild(form);
+            form.submit();**/
+        }
+    </script>
+{% endblock %}
